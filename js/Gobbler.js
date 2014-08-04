@@ -1,4 +1,4 @@
-//Bl0b the game.
+//Gobbler the game.
 
 // Create the canvas
 var canvas = document.createElement("canvas");
