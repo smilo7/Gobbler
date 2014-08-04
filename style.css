@@ -1,0 +1,33 @@
+body{
+
+	background-color: #ABC9D1;
+	font-family: ubuntu,monospace,Arial;
+}
+
+h2{
+
+	color: #4A4945;
+	text-align: left;
+	font-size: 18pt;
+
+}
+
+h3{
+
+	color: #4A4945;
+	text-align: left;
+	font-size: 14pt;
+
+}
+
+li{
+
+	font-family: ubuntu,monospace,Arial;
+	color: #4A4945;
+	background-color: #14171A;
+	font-size: 16pt;
+}
+
+body{
+	background-color: #14171A
+}

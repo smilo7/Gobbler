@@ -1,11 +1,11 @@
 //Gobbler the game.
 
-// Create the canvas
-var canvas = document.createElement("canvas");
-var ctx = canvas.getContext("2d");
-canvas.width = 640;
-canvas.height = 480;
-document.body.appendChild(canvas);
+// Grab canvas from index.html
+var canvas = document.getElementById('canvas');
+var ctx = canvas.getContext('2d');
+
+//gamestate stuff
+var gameOver = false
 
 // Background image
 var bgReady = false;
@@ -38,6 +38,7 @@ var player = {
 	height: 32
 };
 
+//enemy object array
 var enemyArray = [];
 
 for (i = 0; i < 10; i++)
@@ -46,10 +47,10 @@ for (i = 0; i < 10; i++)
 	{
 		speed:48,
 		//random height and width
-		width: 36 * (Math.random() * (3.5 - 0.6) + 0.6).toFixed(1),
-		height: 32 * (Math.random() * (3.5 - 0.6) + 0.6).toFixed(1),
+		width: 36 * (Math.random() * (3.0 - 0.6) + 0.6).toFixed(1),
+		height: 32 * (Math.random() * (3.0 - 0.6) + 0.6).toFixed(1),
 		//random amount that the player will grow by when eating the enemy
-		growthFactor: (Math.random() * (1.25 - 1.1) + 1.1).toFixed(1),
+		growthFactor: (Math.random() * (1.25 - 1.1) + 1.2).toFixed(2),
 	};
 };
 
@@ -105,6 +106,7 @@ var update = function (modifier) {
 		player.x += player.speed * modifier;
 	}
 
+	//call move enemy function
 	moveEnemy(modifier)
 
 	//Collision detection for enemy and player
@@ -125,7 +127,8 @@ var update = function (modifier) {
 			}
 			else
 			{
-				console.log("Game Over!")
+			console.log("Game Over!")
+			gameOver = true
 			}
 			++enemysCaught;
 			//reset();
@@ -143,6 +146,32 @@ function smallerThanPlayer(enemy)
 	{
 		return false
 	}
+}
+
+function restartWindow()
+{
+	//draw square box
+	ctx.beginPath();
+	ctx.rect(canvas.width / 2.9, canvas.height / 2.9, 200, 100);
+	ctx.fillStyle = '#4A4945';
+	ctx.fill();
+	ctx.lineWidth = 3;
+	ctx.strokeStyle = 'black';
+	ctx.stroke();
+
+	ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "16px monospace";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	ctx.fillText("Game Over! Score: ", canvas.width / 2.8, canvas.height / 2.8);
+
+	ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "14px monospace";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	ctx.fillText("Press ⏎ to play again!", canvas.width / 2.8, canvas.height / 2.2);
+
+	return true;
 }
 
 
@@ -261,6 +290,28 @@ var render = function () {
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillText("Blobs eaten: " + enemysCaught, 16, 16);
+
+	ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "16px monospace";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	ctx.fillText("Time taken: ", 510, 16);
+
+	//when the player gets hit by bigger blobs its trigger gameover screen
+	if (gameOver){
+		restartWindow()
+	}
+
+
+};
+
+function lastLoopStanding(){
+
+	// if enter is press reload page
+	if (13 in keysDown){
+			location.reload();
+		}
+
 };
 
 // The main game loop
@@ -268,8 +319,12 @@ var main = function () {
 	var now = Date.now();
 	var delta = now - then;
 
+	if (gameOver==false){
 	update(delta / 1000);
 	render();
+	}	
+
+	lastLoopStanding()
 
 	then = now;
 	// Request to do this again ASAP
