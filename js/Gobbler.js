@@ -47,10 +47,10 @@ for (i = 0; i < 10; i++)
 	{
 		speed:48,
 		//random height and width
-		width: 36 * (Math.random() * (3.0 - 0.6) + 0.6).toFixed(1),
-		height: 32 * (Math.random() * (3.0 - 0.6) + 0.6).toFixed(1),
+		width: 36 * (Math.random() * (3.4 - 0.6) + 0.6).toFixed(1),
+		height: 32 * (Math.random() * (3.4 - 0.6) + 0.6).toFixed(1),
 		//random amount that the player will grow by when eating the enemy
-		growthFactor: (Math.random() * (1.25 - 1.1) + 1.2).toFixed(2),
+		growthFactor: (Math.random() * (1.15 - 1.1) + 1.1).toFixed(2),
 	};
 };
 
@@ -91,6 +91,19 @@ var reset = function ()
 		}
 	};
 
+function biggerThanPlayer(enemy)
+{
+	// if the enemy is bigger in any way
+	if (enemy.width > player.width && enemy.height > player.height)
+	{
+		return true
+	}
+	else
+	{
+		return false
+	}
+}
+
 // Update game objects
 var update = function (modifier) {
 	if (38 in keysDown) { // Player holding up
@@ -118,8 +131,10 @@ var update = function (modifier) {
 			&& player.y <= (enemyArray[i].y + enemyArray[i].height)
 			&& enemyArray[i].y <= (player.y + player.height)
 		) {
-			if (enemyArray[i].width && enemyArray[i].height < player.width && player.height)
+			//if enemy is smaller
+			if (!biggerThanPlayer(enemyArray[i]))
 			{
+			//player grows according to enemy growthFactor value
 			player.width = player.width * enemyArray[i].growthFactor;
 			player.height = player.height * enemyArray[i].growthFactor;
 			clearEatenEnemy(i);
@@ -135,18 +150,6 @@ var update = function (modifier) {
 		}
 	}
 };
-
-function smallerThanPlayer(enemy)
-{
-	if (enemy.width > player.width && enemy.height > player.height)
-	{
-		return true
-	}
-	else
-	{
-		return false
-	}
-}
 
 function restartWindow()
 {
@@ -186,7 +189,7 @@ function moveEnemy(modifier)
 		var distance = Math.sqrt(diffInX*diffInX + diffInY*diffInY); 
 		var randomDirection =  Math.floor((Math.random() * 4) + 1);
 
-		if (distance < 150 && smallerThanPlayer(enemyArray[i]))
+		if (distance < 150 && biggerThanPlayer(enemyArray[i]))
 		{
 			if (player.x > enemyArray[i].x)
 			{
@@ -227,7 +230,7 @@ function moveEnemy(modifier)
 
 
 		//enemies that are smaller than the player 'run away'
-		if (distance < 150 && !smallerThanPlayer(enemyArray[i]))
+		if (distance < 150 && !biggerThanPlayer(enemyArray[i]))
 		{
 			if (player.x > enemyArray[i].x)
 			{
@@ -251,6 +254,7 @@ function moveEnemy(modifier)
 	}		
 }
 
+//TODO
 function screenWrap()
 {
 	for (i = 0; i < enemyArray.length; i++)
@@ -289,7 +293,7 @@ var render = function () {
 	ctx.font = "16px monospace";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Blobs eaten: " + enemysCaught, 16, 16);
+	ctx.fillText("Greens eaten: " + enemysCaught, 16, 16);
 
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "16px monospace";
@@ -319,10 +323,10 @@ var main = function () {
 	var now = Date.now();
 	var delta = now - then;
 
-	if (gameOver==false){
+	if (gameOver == false){
 	update(delta / 1000);
 	render();
-	}	
+	}
 
 	lastLoopStanding()
 
