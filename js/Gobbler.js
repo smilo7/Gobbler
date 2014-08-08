@@ -5,7 +5,7 @@ var canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
 
 //gamestate stuff
-var gameOver = false
+var gameOver = false;
 
 // Background image
 var bgReady = false;
@@ -63,7 +63,7 @@ for (i = 0; i < enemyArray.length; i++)
 	console.log(enemyArray[i].growthFactor)
 }
 
-var enemysCaught = 0;
+var enemiesEaten = 0;
 
 // Handle keyboard controls
 var keysDown = {};
@@ -145,10 +145,13 @@ var update = function (modifier) {
 			console.log("Game Over!")
 			gameOver = true
 			}
-			++enemysCaught;
+			++enemiesEaten;
 			//reset();
 		}
 	}
+
+	//screen wrap function for players and enemies
+	screenWrap()
 };
 
 function restartWindow()
@@ -166,7 +169,7 @@ function restartWindow()
 	ctx.font = "16px monospace";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Game Over! Score: ", canvas.width / 2.8, canvas.height / 2.8);
+	ctx.fillText("Game Over! Score:" + timeTaken*enemiesEaten, canvas.width / 2.8, canvas.height / 2.8);
 
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "14px monospace";
@@ -254,17 +257,46 @@ function moveEnemy(modifier)
 	}		
 }
 
-//TODO
 function screenWrap()
 {
 	for (i = 0; i < enemyArray.length; i++)
+
+	//screenwrap for enemies
+	if (enemyArray[i].x > 640)
 	{
-		if (player.x == 640)
-		{
-		player.x = 5
-		}
-	}	
-}
+	enemyArray[i].x = 0 - enemyArray[i].width
+	}
+	else if (enemyArray[i].x < 0 - enemyArray[i].width)
+	{
+	player.x = 640
+	}
+	else if (enemyArray[i].y > 480)
+	{
+	enemyArray[i].y = 0 - enemyArray[i].width
+	}
+	else if (enemyArray[i].y < 0 - enemyArray[i].width)
+	{
+	enemyArray[i].y = 480
+	}
+
+	//screenwrap for player
+	else if (player.x > 640)
+	{
+	player.x = 0 - player.width
+	}
+	else if (player.x < 0 - player.width)
+	{
+	player.x = 640
+	}
+	if (player.y > 480)
+	{
+	player.y = 0 - player.width
+	}
+	if (player.y < 0 - player.width)
+	{
+	player.y = 480
+	}
+};
 // remove enemy when eaten
 function clearEatenEnemy(i)
 {
@@ -293,13 +325,13 @@ var render = function () {
 	ctx.font = "16px monospace";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Greens eaten: " + enemysCaught, 16, 16);
+	ctx.fillText("Greens eaten: " + enemiesEaten, 16, 16);
 
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "16px monospace";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Time taken: ", 510, 16);
+	ctx.fillText("Time taken:" + timeTaken, 500, 16);
 
 	//when the player gets hit by bigger blobs its trigger gameover screen
 	if (gameOver){
@@ -308,6 +340,14 @@ var render = function () {
 
 
 };
+
+//time taken in seconds
+var timeTaken = 0;
+setInterval(setTime, 1000);
+function setTime()
+{
+	++timeTaken;
+}
 
 function lastLoopStanding(){
 
@@ -339,7 +379,7 @@ var main = function () {
 var w = window;
 requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame || w.msRequestAnimationFrame || w.mozRequestAnimationFrame;
 
-// Let's play this game!
+// Start game
 var then = Date.now();
 reset();;
 main();
