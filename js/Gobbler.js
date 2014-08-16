@@ -169,7 +169,7 @@ function restartWindow()
 	ctx.font = "16px monospace";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Game Over! Score:" + timeTaken*enemiesEaten, canvas.width / 2.8, canvas.height / 2.8);
+	ctx.fillText("Game Over! Score:" + (enemiesEaten - (timeTaken / 2).toFixed(1)), canvas.width / 2.8, canvas.height / 2.8);
 
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "14px monospace";
