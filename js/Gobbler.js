@@ -93,7 +93,7 @@ var reset = function ()
 
 function biggerThanPlayer(enemy)
 {
-	// if the enemy is bigger in any way
+	// if the enemy is bigger in ANY way
 	if (enemy.width > player.width && enemy.height > player.height)
 	{
 		return true
@@ -114,9 +114,11 @@ var update = function (modifier) {
 	}
 	if (37 in keysDown) { // Player holding left
 		player.x -= player.speed * modifier;
+		playerImage.src = "images/playerWalkLeft.png"
 	}
 	if (39 in keysDown) { // Player holding right
 		player.x += player.speed * modifier;
+		playerImage.src = "images/playerWalkRight.png"
 	}
 
 	//call move enemy function
@@ -150,7 +152,7 @@ var update = function (modifier) {
 		}
 	}
 
-	//screen wrap function for players and enemies
+	//call screen wrap function for players and enemies
 	screenWrap()
 };
 
@@ -192,7 +194,7 @@ function moveEnemy(modifier)
 		var distance = Math.sqrt(diffInX*diffInX + diffInY*diffInY); 
 		var randomDirection =  Math.floor((Math.random() * 4) + 1);
 
-		if (distance < 150 && biggerThanPlayer(enemyArray[i]))
+		if (distance < 208 && biggerThanPlayer(enemyArray[i]))
 		{
 			if (player.x > enemyArray[i].x)
 			{
@@ -233,7 +235,7 @@ function moveEnemy(modifier)
 
 
 		//enemies that are smaller than the player 'run away'
-		if (distance < 150 && !biggerThanPlayer(enemyArray[i]))
+		if (distance < 208 && !biggerThanPlayer(enemyArray[i]))
 		{
 			if (player.x > enemyArray[i].x)
 			{
@@ -280,7 +282,7 @@ function screenWrap()
 	}
 
 	//screenwrap for player
-	else if (player.x > 640)
+	if (player.x > 640)
 	{
 	player.x = 0 - player.width
 	}
