@@ -7,4 +7,4 @@
 - Just run *index.html* to play.
 
 ##Screenshot
-![Screenshot of Gobbler](/images/screenshot.png "Screenshot")
+![Screenshot of Gobbler](/assets/screenshot.png "Screenshot")
